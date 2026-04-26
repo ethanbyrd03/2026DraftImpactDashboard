@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026 NBA Draft — Impact Model</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="shell">
+
+  <!-- ── HERO ───────────────────────────────────────────────────────────── -->
+  <div class="hero">
+    <div class="hero-eyebrow">Data · Analytics · 2026 NBA Draft</div>
+    <h1>NBA Impact<br><em>Model 2026</em></h1>
+    <p class="hero-desc">
+      Raw college stats (Tankathon / BartTorvik, per 36 min) adjusted for age and
+      strength of schedule using the Engelmann methodology, then scored into a
+      composite NBA impact projection. 71 ranked prospects + international players.
+    </p>
+    <div class="hero-meta">
+      <div class="hero-stat">
+        <div class="hero-stat-val" id="m-total">—</div>
+        <div class="hero-stat-lbl">Prospects</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val" id="m-top">—</div>
+        <div class="hero-stat-lbl">Top impact</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val" id="m-gain">—</div>
+        <div class="hero-stat-lbl">Max adj gain (BPM)</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val" id="m-drop">—</div>
+        <div class="hero-stat-lbl">Max adj drop (BPM)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TABS ───────────────────────────────────────────────────────────── -->
+  <div class="tab-row">
+    <button class="tab-btn on"  onclick="switchTab('board')">Big Board</button>
+    <button class="tab-btn"     onclick="switchTab('charts')">Charts</button>
+    <button class="tab-btn"     onclick="switchTab('cards')">Player Cards</button>
+    <button class="tab-btn"     onclick="switchTab('method')">Methodology</button>
+  </div>
+
+  <!-- ── BIG BOARD ──────────────────────────────────────────────────────── -->
+  <div class="panel on" id="p-board">
+    <div class="controls">
+      <div class="search-wrap">
+        <input type="text" id="search" placeholder="Search player…" oninput="onBoardFilterChange()">
+      </div>
+      <div class="ctrl-group">
+        <span class="ctrl-lbl">SORT</span>
+        <select id="sort-key" onchange="onBoardFilterChange()">
+          <option value="impact">Impact score</option>
+          <option value="adj_bpm">Adj BPM</option>
+          <option value="bpm">Raw BPM</option>
+          <option value="obpm">OBPM</option>
+          <option value="dbpm">DBPM</option>
+          <option value="adj_obpm">Adj OBPM</option>
+          <option value="adj_dbpm">Adj DBPM</option>
+          <option value="tankRank">Tankathon rank</option>
+          <option value="age">Age (youngest first)</option>
+          <option value="sos">SOS (toughest first)</option>
+          <option value="pts">Pts/36</option>
+        </select>
+      </div>
+      <div class="ctrl-group">
+        <span class="ctrl-lbl">POSITION</span>
+        <select id="pos-f" onchange="onBoardFilterChange()">
+          <option value="all">All</option>
+          <option value="G">Guards</option>
+          <option value="F">Forwards</option>
+          <option value="C">Centers</option>
+          <option value="I">International</option>
+        </select>
+      </div>
+      <div class="ctrl-group">
+        <span class="ctrl-lbl">YEAR</span>
+        <select id="yr-f" onchange="onBoardFilterChange()">
+          <option value="all">All</option>
+          <option value="FR">Freshman</option>
+          <option value="SO">Sophomore</option>
+          <option value="JR">Junior</option>
+          <option value="SR">Senior</option>
+          <option value="INT">International</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead id="thead-board"></thead>
+        <tbody id="tbody-board"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── CHARTS ─────────────────────────────────────────────────────────── -->
+  <div class="panel" id="p-charts">
+    <div class="chart-grid">
+
+      <div class="chart-box full">
+        <div class="chart-title">Impact score — top 25 prospects</div>
+        <div class="chart-sub">
+          Composite NBA impact score vs raw BPM. Age &amp; SOS adjustments applied.
+          Sorted by impact score descending.
+        </div>
+        <div class="chart-inner" style="height:340px">
+          <canvas id="c-impact" role="img" aria-label="Bar chart of NBA impact scores for top 25 2026 draft prospects"></canvas>
+        </div>
+        <div class="legend-row">
+          <div class="legend-item"><span class="lsq" style="background:#e8c547"></span>Impact score</div>
+          <div class="legend-item"><span class="lsq" style="background:rgba(232,197,71,.22)"></span>Raw BPM (for scale)</div>
+        </div>
+      </div>
+
+      <div class="chart-box">
+        <div class="chart-title">Offense vs Defense — adjusted BPM</div>
+        <div class="chart-sub">Adj OBPM + Adj DBPM stacked for the top 20 prospects by impact score.</div>
+        <div class="pill-row">
+          <button class="pill on" onclick="onOdModeChange('adj')" id="pill-adj">Adjusted</button>
+          <button class="pill"    onclick="onOdModeChange('raw')" id="pill-raw">Raw</button>
+        </div>
+        <div class="chart-inner" style="height:300px">
+          <canvas id="c-od" role="img" aria-label="Stacked bar chart of offensive and defensive BPM"></canvas>
+        </div>
+        <div class="legend-row">
+          <div class="legend-item"><span class="lsq" style="background:#60a5fa"></span>Offensive BPM</div>
+          <div class="legend-item"><span class="lsq" style="background:#4ade80"></span>Defensive BPM</div>
+        </div>
+      </div>
+
+      <div class="chart-box">
+        <div class="chart-title">Age vs Impact — youth adjustment effect</div>
+        <div class="chart-sub">
+          Bubble size = raw BPM. Young players near the top gained the most from the youth bonus.
+          Hover a bubble for details.
+        </div>
+        <div class="chart-inner" style="height:300px">
+          <canvas id="c-scatter" role="img" aria-label="Bubble scatter of prospect age vs impact score"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-box full">
+        <div class="chart-title">BPM adjustment delta — who gained &amp; lost the most</div>
+        <div class="chart-sub">
+          Difference between adjusted BPM and raw BPM for all college prospects.
+          Green = benefited from adjustments. Red = penalized.
+        </div>
+        <div class="chart-inner" style="height:320px">
+          <canvas id="c-delta" role="img" aria-label="Bar chart of BPM adjustment deltas for all prospects"></canvas>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── PLAYER CARDS ───────────────────────────────────────────────────── -->
+  <div class="panel" id="p-cards">
+    <div class="controls" style="margin-bottom:18px">
+      <div class="ctrl-group">
+        <span class="ctrl-lbl">POSITION</span>
+        <select id="card-pos" onchange="onCardFilterChange()">
+          <option value="all">All positions</option>
+          <option value="G">Guards</option>
+          <option value="F">Forwards</option>
+          <option value="C">Centers</option>
+        </select>
+      </div>
+      <div class="ctrl-group">
+        <span class="ctrl-lbl">SORT</span>
+        <select id="card-sort" onchange="onCardFilterChange()">
+          <option value="impact">Impact score</option>
+          <option value="adj_bpm">Adj BPM</option>
+          <option value="tankRank">Tankathon rank</option>
+          <option value="age">Age</option>
+        </select>
+      </div>
+    </div>
+    <div class="cards-grid" id="cards-grid"></div>
+  </div>
+
+  <!-- ── METHODOLOGY ────────────────────────────────────────────────────── -->
+  <div class="panel" id="p-method">
+    <div class="method-grid">
+
+      <div class="method-card full">
+        <div class="method-num">01 / OVERVIEW</div>
+        <div class="method-title">How the NBA impact score works</div>
+        <div class="method-body">
+          This model combines three analytical frameworks to project which 2026 draft
+          prospects will have the highest impact at the NBA level. Raw college statistics
+          alone are poor predictors of NBA success because they ignore two critical
+          variables: how old a player is relative to their competition, and how good their
+          competition actually was. These adjustments correct for both.
+        </div>
+      </div>
+
+      <div class="method-card">
+        <div class="method-num">02 / RAW BPM</div>
+        <div class="method-title">Box Plus/Minus</div>
+        <div class="method-body">
+          BPM estimates a player's impact per 100 possessions relative to a league-average
+          player. It is calculated from box score statistics (points, rebounds, assists,
+          steals, blocks, turnovers, usage) using a regression model calibrated to actual
+          on-court +/− data.<br><br>
+          <strong>OBPM</strong> measures offensive impact.<br>
+          <strong>DBPM</strong> measures defensive impact.<br>
+          <strong>BPM = OBPM + DBPM</strong><br><br>
+          Data sourced from Tankathon / BartTorvik for the 2025–26 college season
+          (per-36 minute basis, updated through late March 2026).
+        </div>
+      </div>
+
+      <div class="method-card">
+        <div class="method-num">03 / AGE ADJUSTMENT</div>
+        <div class="method-title">Engelmann Age Correction</div>
+        <div class="method-body">
+          Younger players are statistically underrated by raw box scores. A 19-year-old
+          dominating college basketball is a stronger signal than a 23-year-old doing the
+          same — age relative to competition peers matters enormously.<br><br>
+          Per the Engelmann / Royce Webb methodology:
+          <div class="formula-box">
+            Baseline age = 19.0 years<br>
+            age_delta = 19.0 − player_age<br>
+            <br>
+            adj_OBPM += age_delta × 0.55<br>
+            adj_DBPM += age_delta × 0.35
+          </div>
+          A player 1 year younger than the baseline gains +0.90 total BPM.
+          A 23-year-old is penalized −3.60 BPM.
+        </div>
+        <a class="ref-link"
+           href="https://www.roycewebb.com/p/how-to-adjust-college-stats-featuring"
+           target="_blank" rel="noopener">
+          → Royce Webb / Engelmann methodology
+        </a>
+      </div>
+
+      <div class="method-card">
+        <div class="method-num">04 / SOS ADJUSTMENT</div>
+        <div class="method-title">Strength of Schedule</div>
+        <div class="method-body">
+          A player producing elite BPM against a weak mid-major schedule is less impressive
+          than the same numbers against Power Five competition. We estimate each program's
+          average opponent SRS and adjust toward a common baseline.<br><br>
+          <div class="formula-box">
+            SOS baseline = 7.0 (avg SRS for historical draft classes)<br>
+            sos_delta = (player_sos − 7.0) × 0.40<br>
+            <br>
+            adj_OBPM += sos_delta<br>
+            adj_DBPM unchanged (DBPM is SOS-invariant)
+          </div>
+          SOS estimates are derived from conference tier and team NET / KenPom data
+          for the 2025–26 season.
+        </div>
+      </div>
+
+      <div class="method-card">
+        <div class="method-num">05 / COMPOSITE SCORE</div>
+        <div class="method-title">Impact score formula</div>
+        <div class="method-body">
+          The composite impact score weights adjusted metrics into a single ranking:
+          <div class="formula-box">
+            Impact =<br>
+            &nbsp;&nbsp;adj_BPM  × 0.40<br>
+            &nbsp;+ adj_OBPM × 0.25<br>
+            &nbsp;+ adj_DBPM × 0.20<br>
+            &nbsp;+ age_factor × 0.10<br>
+            &nbsp;+ usage_factor × 0.05
+          </div>
+          <strong>age_factor</strong> — 0–10 scale. 19-yr-old = 5.0; each year younger adds +1.2.<br>
+          <strong>usage_factor</strong> — 0–10 scale. 35% usage = 10.0.<br><br>
+          This is a statistical model only. It does not account for medical history,
+          position scarcity, character, or team fit.
+        </div>
+      </div>
+
+      <div class="method-card">
+        <div class="method-num">06 / KEY FINDINGS</div>
+        <div class="method-title">What the model shows</div>
+        <div class="method-body">
+          <strong>Cameron Boozer</strong> tops the model — the highest raw BPM (18.7) in
+          the class combined with an 18.9-year-old age bonus on a tough Duke schedule.<br><br>
+          <strong>Yaxel Lendeborg</strong> drops furthest: elite 16.7 raw BPM is
+          heavily penalized at age 23.7, making his adjusted output far more modest.<br><br>
+          <strong>Zuby Ejiofor</strong> is a notable model riser: raw BPM 14.5 at
+          St. John's with a tough SOS earns a strong adjusted score despite a lower
+          Tankathon rank.<br><br>
+          <strong>International players</strong> (López, de Larrea, Daniels, Faye, Ruzic)
+          are shown with available raw stats but estimated impact scores due to missing
+          college BPM data.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── FOOTER ─────────────────────────────────────────────────────────── -->
+  <div class="footer">
+    <div class="footer-lft">
+      Data: Tankathon / BartTorvik (2025–26 season, per 36 min, as of late March 2026).<br>
+      Adjustments: Engelmann age &amp; SOS methodology via Royce Webb's Substack.
+      BPR framework: EvanMiya.<br>
+      Built by Ethan Byrd ·
+      <a href="mailto:ethanbyrd15@gmail.com" style="color:inherit">ethanbyrd15@gmail.com</a> ·
+      <a href="https://github.com/ethanbyrd03" target="_blank" style="color:inherit">github.com/ethanbyrd03</a>
+    </div>
+    <div class="footer-rgt">2026 NBA Draft Impact Model v1.0</div>
+  </div>
+
+</div><!-- /.shell -->
+
+<!-- ── SCRIPTS ──────────────────────────────────────────────────────────── -->
+<!-- Load order matters: data → model → charts → ui → main -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="js/players.js"></script>
+<script src="js/model.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+
+</body>
+</html>
