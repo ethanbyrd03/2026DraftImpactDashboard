@@ -100,6 +100,15 @@ body {
   margin-top:     3px;
 }
 
+.hero-stat-name {
+  font-family:    var(--mono);
+  font-size:      10px;
+  color:          var(--accent);
+  letter-spacing: .06em;
+  margin-top:     2px;
+  min-height:     14px;
+}
+
 /* ── TABS ──────────────────────────────────────────────────── */
 .tab-row {
   display:       flex;

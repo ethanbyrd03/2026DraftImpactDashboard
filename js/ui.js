@@ -37,15 +37,21 @@ const BOARD_COLUMNS = [
  * @param {Object[]} data - Adjusted prospect array
  */
 function renderHeroMetrics(data) {
-  const withBpm    = data.filter(d => !d.intl);
-  const topImpact  = [...data].sort((a, b) => b.impact - a.impact)[0];
-  const maxGain    = Math.max(...withBpm.map(d => d.bpm_delta));
-  const maxDrop    = Math.min(...withBpm.map(d => d.bpm_delta));
+  const withBpm      = data.filter(d => !d.intl);
+  const topImpact    = [...data].sort((a, b) => b.impact - a.impact)[0];
+  const gainPlayer   = withBpm.reduce((best, p) => p.bpm_delta > best.bpm_delta ? p : best);
+  const dropPlayer   = withBpm.reduce((best, p) => p.bpm_delta < best.bpm_delta ? p : best);
 
   document.getElementById('m-total').textContent = data.length;
   document.getElementById('m-top').textContent   = topImpact.name.split(' ').slice(-1)[0];
-  document.getElementById('m-gain').textContent  = '+' + maxGain.toFixed(1);
-  document.getElementById('m-drop').textContent  = maxDrop.toFixed(1);
+
+  document.getElementById('m-gain').textContent  = '+' + gainPlayer.bpm_delta.toFixed(1);
+  const gainSub = document.getElementById('m-gain-name');
+  if (gainSub) gainSub.textContent = gainPlayer.name.split(' ').slice(-1)[0];
+
+  document.getElementById('m-drop').textContent  = dropPlayer.bpm_delta.toFixed(1);
+  const dropSub = document.getElementById('m-drop-name');
+  if (dropSub) dropSub.textContent = dropPlayer.name.split(' ').slice(-1)[0];
 }
 
 // ── BIG BOARD ─────────────────────────────────────────────────────────────
@@ -121,17 +127,6 @@ function renderBoard(data) {
   });
 
   document.getElementById('tbody-board').innerHTML = html;
-}
-
-/**
- * Click handler for sortable column headers.
- * Updates the sort dropdown and triggers a re-render.
- * @param {string} key
- */
-function sortBy(key) {
-  document.getElementById('sort-key').value = key;
-  // DATA is the global adjusted dataset set in main.js
-  renderBoard(DATA);
 }
 
 // ── PLAYER CARDS ──────────────────────────────────────────────────────────
