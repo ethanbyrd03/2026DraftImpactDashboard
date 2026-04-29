@@ -2,7 +2,7 @@
 
 A data-driven NBA impact projection tool for the 2026 draft class. Raw college stats (per 36 min) are adjusted for player age and strength of schedule using the Engelmann methodology, then combined into a composite impact score.
 
-**Live demo:** [ethanbyrd03.github.io/nba-draft-2026](https://ethanbyrd03.github.io/nba-draft-2026) *(update with your actual GitHub Pages URL)*
+**Live demo:** [ethanbyrd03.github.io/2026DraftImpactDashboard](https://ethanbyrd03.github.io/2026DraftImpactDashboard/)
 
 ---
 
@@ -91,47 +91,6 @@ All weights are defined in `MODEL_CONFIG` in `js/model.js` and can be tuned.
 - **BPR framework reference:** [EvanMiya](https://evanmiya.com)
 
 Data last updated: **March 2026**
-
----
-
-## Deploying to GitHub Pages
-
-1. Push this repo to GitHub
-2. Go to **Settings → Pages**
-3. Set source to **Deploy from a branch → main → / (root)**
-4. Your site will be live at `https://<your-username>.github.io/nba-draft-2026`
-
-No build step required — this is a pure HTML/CSS/JS project with no dependencies beyond Chart.js (loaded from CDN).
-
----
-
-## Updating the data
-
-All prospect data lives in `js/players.js`. Each entry follows this shape:
-
-```js
-{
-  tankRank: 1,          // Tankathon big board rank
-  name:     'Cameron Boozer',
-  school:   'Duke',
-  pos:      'PF',       // Display position string
-  posGrp:   'F',        // 'G' | 'F' | 'C' | 'I' (international)
-  yr:       'FR',       // 'FR' | 'SO' | 'JR' | 'SR' | 'INT'
-  age:      18.9,       // Possession-weighted average age
-  pts:      22.5,       // Per 36 minutes
-  reb:      10.2,
-  ast:      4.1,
-  blk:      0.6,
-  stl:      1.4,
-  ts:       65.3,       // True shooting %
-  usg:      29.9,       // Usage rate %
-  obpm:     12.7,       // Offensive BPM (null for internationals)
-  dbpm:     6.0,        // Defensive BPM (null for internationals)
-  bpm:      18.7,       // Total BPM (null for internationals)
-}
-```
-
-To add the SOS for a new school, add it to `SOS_MAP` at the top of `js/players.js`.
 
 ---
 
