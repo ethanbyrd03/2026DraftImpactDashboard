@@ -1,6 +1,4 @@
 /**
- * players.js
- * ----------
  * Raw prospect database for the 2026 NBA Draft Impact Model.
  *
  * Data sourced from Tankathon / BartTorvik (2025-26 season, per-36 min basis).
@@ -91,7 +89,7 @@ const RAW_PROSPECTS = [
   // ── TIER 2 ──
   { tankRank:4,  name:'Caleb Wilson',       school:'North Carolina', pos:'SF/PF', posGrp:'F', yr:'FR',  age:19.9, pts:19.8, reb:9.4,  ast:2.7, blk:1.4, stl:1.5, ts:62.6, usg:28.7, obpm:8.7,  dbpm:5.3,  bpm:14.0 },
   { tankRank:5,  name:'Kingston Flemings',  school:'Houston',        pos:'PG',    posGrp:'G', yr:'FR',  age:19.5, pts:16.1, reb:4.1,  ast:5.2, blk:0.3, stl:1.5, ts:56.3, usg:26.0, obpm:6.6,  dbpm:6.0,  bpm:12.6 },
-  { tankRank:6,  name:'Darius Acuff ',   school:'Arkansas',       pos:'PG',    posGrp:'G', yr:'FR',  age:19.6, pts:23.5, reb:3.1,  ast:6.4, blk:0.3, stl:0.8, ts:60.4, usg:29.5, obpm:9.4,  dbpm:0.7,  bpm:10.1 },
+  { tankRank:6,  name:'Darius Acuff',   school:'Arkansas',       pos:'PG',    posGrp:'G', yr:'FR',  age:19.6, pts:23.5, reb:3.1,  ast:6.4, blk:0.3, stl:0.8, ts:60.4, usg:29.5, obpm:9.4,  dbpm:0.7,  bpm:10.1 },
   { tankRank:7,  name:'Keaton Wagler',      school:'Illinois',       pos:'SG/PG', posGrp:'G', yr:'FR',  age:19.4, pts:17.9, reb:5.1,  ast:4.2, blk:0.4, stl:0.9, ts:59.6, usg:25.2, obpm:8.8,  dbpm:3.5,  bpm:12.3 },
 
   // ── THE REST ──

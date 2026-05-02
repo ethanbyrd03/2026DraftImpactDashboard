@@ -1,6 +1,4 @@
 /**
- * model.js
- * --------
  * Age + Strength-of-Schedule adjustment engine and composite impact score.
  *
  * Methodology:

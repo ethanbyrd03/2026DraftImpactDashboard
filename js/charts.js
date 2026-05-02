@@ -1,7 +1,4 @@
 /**
- * charts.js
- * ---------
- * All Chart.js chart builders for the 2026 NBA Draft Impact Model.
  * Depends on: model.js (for DATA, fmt), Chart.js (CDN).
  *
  * Chart instances are stored in module-level variables so they can

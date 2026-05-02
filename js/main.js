@@ -1,8 +1,4 @@
 /**
- * main.js
- * -------
- * Application entry point for the 2026 NBA Draft Impact Model.
- *
  * Load order (see index.html):
  *   1. players.js  — RAW_PROSPECTS array + SOS_MAP + getSOS()
  *   2. model.js    — computeAdjustments(), buildDataset(), fmt(), etc.

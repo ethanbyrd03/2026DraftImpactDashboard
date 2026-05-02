@@ -1,17 +1,3 @@
-/**
- * ui.js
- * -----
- * All DOM rendering and UI interaction for the 2026 NBA Draft Impact Model.
- * Depends on: players.js, model.js, charts.js.
- *
- * Responsibilities:
- *   - Render / re-render the sortable Big Board table
- *   - Render Player Cards grid
- *   - Tab switching (board / charts / cards / methodology)
- *   - Hero summary metrics
- *   - Search, filter, and sort controls
- */
-
 // ── TABLE COLUMN DEFINITIONS ───────────────────────────────────────────────
 
 const BOARD_COLUMNS = [
@@ -201,9 +187,8 @@ function renderCards(data) {
 
         <div class="pcard-bars">
           ${_bar('Pts/36', p.pts, 32,  '#60a5fa')}
-          ${_bar('Reb/36', p.reb, 14,  '#4ade80')}
-          ${_bar('Ast/36', p.ast, 10,  '#e8c547')}
-          ${_bar('Blk/36', p.blk,  4,  '#a78bfa')}
+          ${_bar('Reb/36', p.reb, 25,  '#4ade80')}
+          ${_bar('Ast/36', p.ast, 20,  '#e8c547')}
         </div>
       </div>`;
   }).join('');
